@@ -5,16 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>02-SpringBean-LifeCycle</artifactId>
+    <artifactId>06-RunTime_Value-Injection</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>7.0.2</version>
-            <scope>compile</scope>
-        </dependency>
-    </dependencies>
 
-
+<dependencies>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>7.0.2</version>
+    </dependency>
+</dependencies>
 </project>

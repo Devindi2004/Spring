@@ -6,8 +6,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="SpringBean-LifeCycle" />
+        <module name="02-SpringBean-LifeCycle" />
+        <module name="07-SpringEnviorement" />
+        <module name="Dependency-Injection" />
+        <module name="06-RunTime_Value-Injection" />
+        <module name="Configurations" />
         <module name="01_Spring_Core" />
+        <module name="04-FullMode-VS-LightMode" />
       </profile>
     </annotationProcessing>
   </component>

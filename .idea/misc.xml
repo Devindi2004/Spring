@@ -6,6 +6,11 @@
       <list>
         <option value="$PROJECT_DIR$/01_Spring_Core/pom.xml" />
         <option value="$PROJECT_DIR$/SpringBean-LifeCycle/pom.xml" />
+        <option value="$PROJECT_DIR$/Dependency-Injection/pom.xml" />
+        <option value="$PROJECT_DIR$/04-FullMode-VS-LightMode/pom.xml" />
+        <option value="$PROJECT_DIR$/Configurations/pom.xml" />
+        <option value="$PROJECT_DIR$/06-RunTime_Value-Injection/pom.xml" />
+        <option value="$PROJECT_DIR$/07-SpringEnviorement/pom.xml" />
       </list>
     </option>
   </component>
