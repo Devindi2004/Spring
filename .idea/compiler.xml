@@ -9,6 +9,8 @@
         <module name="02-SpringBean-LifeCycle" />
         <module name="07-SpringEnviorement" />
         <module name="Dependency-Injection" />
+        <module name="09-REST-Controller" />
+        <module name="08-Spring-WebMVC" />
         <module name="06-RunTime_Value-Injection" />
         <module name="Configurations" />
         <module name="01_Spring_Core" />
