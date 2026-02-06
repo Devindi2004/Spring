@@ -18,10 +18,10 @@ public class CustomerServiceImpl implements CustomerService {
     public void saveCustomer(CustomerDTO customerDTO) {
         customerRepository.save(
                 new Customer(
-                        customerDTO.getcId(),
-                        customerDTO.getcName(),
-                        customerDTO.getcAddress(),
-                        customerDTO.getcAge()
+                        customerDTO.getCId(),
+                        customerDTO.getCName(),
+                        customerDTO.getCAddress(),
+                        customerDTO.getCAge()
                 ));
     }
 
@@ -29,10 +29,10 @@ public class CustomerServiceImpl implements CustomerService {
     public void updateCustomer(CustomerDTO customerDTO) {
         customerRepository.save(
                 new Customer(
-                        customerDTO.getcId(),
-                        customerDTO.getcName(),
-                        customerDTO.getcAddress(),
-                        customerDTO.getcAge()
+                        customerDTO.getCId(),
+                        customerDTO.getCName(),
+                        customerDTO.getCAddress(),
+                        customerDTO.getCAge()
                 ));
     }
 }

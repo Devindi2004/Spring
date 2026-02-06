@@ -1,15 +1,15 @@
 function saveCustomer(){
-    let cId = $('customerId').val();
-    let cName = $('customerName').val();
-    let cAddress = $('customerAddress').val();
-    let cAge = $('customerAge').val();
+    let cId = $('#customerId').val();
+    let cName = $('#customerName').val();
+    let cAddress = $('#customerAddress').val();
+    let cAge = $('#customerAge').val();
 
-    console.log(cId,cName,cAddress,cAge)
+    console.log("cid=",cId,cName,cAddress,cAge)
     $.ajax({
         url:'http://localhost:8080/api/v1/customer',
         method:'POST',
-        dataType:"application/json",
-        "data": JSON.stringify({
+        contentType: "application/json",
+        data: JSON.stringify({
             "cId": cId,
             "cName": cName,
             "cAddress": cAddress,
@@ -33,8 +33,8 @@ function updateCustomer(){
     $.ajax({
         url:'http://localhost:8080/api/v1/customer',
         method:'POST',
-        dataType:"application/json",
-        "data": JSON.stringify({
+        contentType:"application/json",
+        data: JSON.stringify({
             "cId": cId,
             "cName": cName,
             "cAddress": cAddress,

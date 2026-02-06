@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("api/v1/customer")
 @CrossOrigin
-public class CustomerController {
+public class CustomerController{
 
     public final CustomerService customerService;
 
