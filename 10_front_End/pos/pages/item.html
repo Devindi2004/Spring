@@ -29,6 +29,11 @@
     </div>
 
     <div class="mb-2">
+        <label class="form-label">Item Price</label>
+        <input id="itemPrice" type="text" class="form-control">
+    </div>
+
+    <div class="mb-2">
         <label class="form-label">Item Quantity</label>
         <input id="itemQty" type="number" class="form-control">
     </div>
@@ -49,74 +54,16 @@
     <tr>
         <th>Item ID</th>
         <th>Item Name</th>
+        <th>Price</th>
         <th>Quantity</th>
     </tr>
     </thead>
     <tbody id="itemTable"></tbody>
 </table>
 
-<script>
-    let selectedRow = null;
-
-    function saveItem() {
-        const id = itemId.value;
-        const name = itemName.value;
-        const qty = itemQty.value;
-
-        if (!id || !name) {
-            alert("Item ID & Name required!");
-            return;
-        }
-
-        const table = document.getElementById("itemTable");
-        const row = table.insertRow();
-
-        row.insertCell(0).innerText = id;
-        row.insertCell(1).innerText = name;
-        row.insertCell(2).innerText = qty;
-
-        row.onclick = function () {
-            selectedRow = this;
-            itemId.value = this.cells[0].innerText;
-            itemName.value = this.cells[1].innerText;
-            itemQty.value = this.cells[2].innerText;
-        };
-
-        resetForm();
-    }
-
-    function updateItem() {
-        if (!selectedRow) {
-            alert("Select a row to update");
-            return;
-        }
-
-        selectedRow.cells[0].innerText = itemId.value;
-        selectedRow.cells[1].innerText = itemName.value;
-        selectedRow.cells[2].innerText = itemQty.value;
-
-        resetForm();
-    }
-
-    function deleteItem() {
-        if (!selectedRow) {
-            alert("Select a row to delete");
-            return;
-        }
-
-        selectedRow.remove();
-        resetForm();
-    }
-
-    function resetForm() {
-        itemId.value = "";
-        itemName.value = "";
-        itemQty.value = "";
-        selectedRow = null;
-    }
-</script>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
+<script src="../js/Item.js"></script>
 </body>
 </html>

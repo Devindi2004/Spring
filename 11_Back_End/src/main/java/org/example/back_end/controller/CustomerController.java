@@ -21,8 +21,18 @@ public class CustomerController{
      customerService.saveCustomer(customerDTO);
     }
 
+    @PutMapping
+    public  void updateCustomer(@RequestBody CustomerDTO customerDTO){
+        customerService.updateCustomer(customerDTO);
+    }
+
     @GetMapping
     public List<Customer> getCustomer(){
         return customerService.getCustomerData();
+    }
+
+    @DeleteMapping
+    public  void deleteCustomer(@RequestBody CustomerDTO customerDTO){
+        customerService.deleteCustomer(customerDTO);
     }
 }

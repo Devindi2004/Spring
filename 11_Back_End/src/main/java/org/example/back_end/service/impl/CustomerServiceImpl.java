@@ -44,4 +44,9 @@ public class CustomerServiceImpl implements CustomerService {
 
          return customerList;
     }
+
+    @Override
+    public void deleteCustomer(CustomerDTO customerDTO) {
+        customerRepository.deleteById(customerDTO.getCId());
+    }
 }
