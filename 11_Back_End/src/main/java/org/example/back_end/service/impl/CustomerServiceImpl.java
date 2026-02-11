@@ -6,6 +6,8 @@ import org.example.back_end.repository.CustomerRepository;
 import org.example.back_end.service.custom.CustomerService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
@@ -34,5 +36,12 @@ public class CustomerServiceImpl implements CustomerService {
                         customerDTO.getCAddress(),
                         customerDTO.getCAge()
                 ));
+    }
+
+    @Override
+    public List<Customer> getCustomerData() {
+         List<Customer> customerList = customerRepository.findAll();
+
+         return customerList;
     }
 }
