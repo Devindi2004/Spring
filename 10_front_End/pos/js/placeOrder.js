@@ -4,8 +4,6 @@ $(document).ready(function () {
     getAllOrders();
 });
 
-/* ================= LOAD CUSTOMER ================= */
-
 function loadCustomers() {
 
     $("#customerId").empty();
@@ -15,21 +13,15 @@ function loadCustomers() {
         url: 'http://localhost:8080/api/v1/customer',
         method: 'GET',
         success: function (res) {
-
             for (let c of res) {
                 $("#customerId").append(
                     `<option value="${c.cId}">${c.cId}</option>`
                 );
             }
-        },
-        error: function (err) {
-            console.log(err);
-            alert("Failed to load customers");
         }
     });
 }
 
-/* ================= LOAD ITEM ================= */
 
 function loadItems() {
 
@@ -43,31 +35,33 @@ function loadItems() {
 
             for (let i of res) {
                 $("#itemId").append(
-                    `<option value="${i.itemId}">${i.itemId}</option>`
+                    `<option value="${i.itemId}" data-price="${i.itemPrice}">
+                        ${i.itemId}
+                     </option>`
                 );
             }
-        },
-        error: function (err) {
-            console.log(err);
-            alert("Failed to load items");
         }
     });
 }
 
-/* ================= SAVE ORDER ================= */
+$('#orderQty, #itemId').on('input change', function () {
+
+    let qty = parseInt($('#orderQty').val());
+    let price = $('#itemId option:selected').data('price');
+
+    if (qty && price) {
+        $('#orderPrice').val(qty * price);
+    } else {
+        $('#orderPrice').val("");
+    }
+});
 
 function saveOrder() {
 
     let orderId = $('#orderId').val();
     let customerId = $('#customerId').val();
     let itemId = $('#itemId').val();
-    let orderPrice = $('#orderPrice').val();
     let orderQty = $('#orderQty').val();
-
-    if (orderId === "" || customerId === "" || itemId === "") {
-        alert("Please select Customer & Item!");
-        return;
-    }
 
     $.ajax({
         url: 'http://localhost:8080/api/v1/order',
@@ -77,29 +71,22 @@ function saveOrder() {
             orderId: orderId,
             customerId: customerId,
             itemId: itemId,
-            orderQty: parseInt(orderQty),
-            orderPrice: parseFloat(orderPrice)
+            orderQty: parseInt(orderQty)
         }),
         success: function () {
             alert("Order Saved Successfully");
             getAllOrders();
             resetForm();
-        },
-        error: function (err) {
-            console.log(err);
-            alert("Error Saving Order");
         }
     });
 }
 
-/* ================= UPDATE ORDER ================= */
 
 function updateOrder() {
 
     let orderId = $('#orderId').val();
     let customerId = $('#customerId').val();
     let itemId = $('#itemId').val();
-    let orderPrice = $('#orderPrice').val();
     let orderQty = $('#orderQty').val();
 
     $.ajax({
@@ -110,35 +97,33 @@ function updateOrder() {
             orderId: orderId,
             customerId: customerId,
             itemId: itemId,
-            orderQty: parseInt(orderQty),
-            orderPrice: parseFloat(orderPrice)
+            orderQty: parseInt(orderQty)
         }),
         success: function () {
             alert("Order Updated Successfully");
             getAllOrders();
             resetForm();
-        },
-        error: function (err) {
-            console.log(err);
-            alert("Error Updating Order");
         }
     });
 }
 
-/* ================= DELETE ORDER ================= */
 
 function deleteOrder() {
 
     let orderId = $('#orderId').val();
 
-    if (orderId === "") {
-        alert("Enter Order ID to delete");
+    if (!orderId) {
+        alert("Select Order to Delete");
         return;
     }
 
     $.ajax({
-        url: 'http://localhost:8080/api/v1/order/' + orderId,
-        method: 'DELETE',
+        url: "http://localhost:8080/api/v1/order",
+        method: "DELETE",
+        contentType: "application/json",
+        data: JSON.stringify({
+            orderId: orderId
+        }),
         success: function () {
             alert("Order Deleted Successfully");
             getAllOrders();
@@ -149,9 +134,8 @@ function deleteOrder() {
             alert("Error Deleting Order");
         }
     });
-}
 
-/* ================= GET ALL ORDERS ================= */
+}
 
 function getAllOrders() {
 
@@ -176,15 +160,9 @@ function getAllOrders() {
 
                 $("#orderTable").append(row);
             }
-        },
-        error: function (err) {
-            console.log(err);
-            alert("Failed to Load Orders");
         }
     });
 }
-
-/* ================= TABLE CLICK ================= */
 
 $(document).on("click", "#orderTable tr", function () {
 
@@ -196,8 +174,6 @@ $(document).on("click", "#orderTable tr", function () {
     $('#orderQty').val(cols.eq(3).text());
     $('#orderPrice').val(cols.eq(4).text());
 });
-
-/* ================= RESET ================= */
 
 function resetForm() {
     $('#orderId').val("");

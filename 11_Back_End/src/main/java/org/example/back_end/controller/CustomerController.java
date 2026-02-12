@@ -2,8 +2,10 @@ package org.example.back_end.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.back_end.dto.CustomerDTO;
-import org.example.back_end.entity.Customer;
 import org.example.back_end.service.custom.CustomerService;
+import org.example.back_end.util.APIResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,27 +14,67 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("api/v1/customer")
 @CrossOrigin
-public class CustomerController{
+public class CustomerController {
 
-    public final CustomerService customerService;
+    private final CustomerService customerService;
 
     @PostMapping
-    public void saveCustomer(@RequestBody CustomerDTO customerDTO){
-     customerService.saveCustomer(customerDTO);
+    public ResponseEntity<APIResponse<String>> saveCustomer(@RequestBody CustomerDTO customerDTO) {
+
+        customerService.saveCustomer(customerDTO);
+
+        return new ResponseEntity<>(
+                new APIResponse<>(
+                        201,
+                        "Customer Saved Successfully",
+                        null
+                ),
+                HttpStatus.CREATED
+        );
     }
 
     @PutMapping
-    public  void updateCustomer(@RequestBody CustomerDTO customerDTO){
+    public ResponseEntity<APIResponse<String>> updateCustomer(@RequestBody CustomerDTO customerDTO) {
+
         customerService.updateCustomer(customerDTO);
+
+        return new ResponseEntity<>(
+                new APIResponse<>(
+                        200,
+                        "Customer Updated Successfully",
+                        null
+                ),
+                HttpStatus.OK
+        );
     }
 
     @GetMapping
-    public List<Customer> getCustomer(){
-        return customerService.getCustomerData();
+    public ResponseEntity<APIResponse<List<CustomerDTO>>> getCustomer() {
+
+        List<CustomerDTO> customerList = customerService.getCustomerData();
+
+        return new ResponseEntity<>(
+                new APIResponse<>(
+                        200,
+                        "Customer List Retrieved Successfully",
+                        customerList
+                ),
+                HttpStatus.OK
+        );
     }
 
     @DeleteMapping
-    public  void deleteCustomer(@RequestBody CustomerDTO customerDTO){
+    public ResponseEntity<APIResponse<String>> deleteCustomer(@RequestBody CustomerDTO customerDTO) {
+
         customerService.deleteCustomer(customerDTO);
+
+        return new ResponseEntity<>(
+                new APIResponse<>(
+                        200,
+                        "Customer Deleted Successfully",
+                        null
+                ),
+                HttpStatus.OK
+        );
     }
 }

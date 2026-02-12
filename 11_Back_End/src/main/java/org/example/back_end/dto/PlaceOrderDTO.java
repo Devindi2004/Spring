@@ -13,6 +13,6 @@ public class PlaceOrderDTO {
     private String orderId;
     private String customerId;
     private String itemId;
-    private int orderQty;
-    private double orderPrice;
+    private Integer orderQty;
+    private Double orderPrice;
 }

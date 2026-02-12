@@ -26,9 +26,10 @@ public class ItemServiceImpl implements ItemService {
                 new Item(
                         itemDTO.getItemId(),
                         itemDTO.getItemName(),
-                        itemDTO.getItemPrice(),
-                        itemDTO.getItemQty()
+                        itemDTO.getItemQty(),
+                        itemDTO.getItemPrice()
                 ));
+
     }
 
     @Override
@@ -37,10 +38,10 @@ public class ItemServiceImpl implements ItemService {
                 new Item(
                         itemDTO.getItemId(),
                         itemDTO.getItemName(),
-                        itemDTO.getItemPrice(),
-                        itemDTO.getItemQty()
-
+                        itemDTO.getItemQty(),
+                        itemDTO.getItemPrice()
                 ));
+
     }
 
     @Override

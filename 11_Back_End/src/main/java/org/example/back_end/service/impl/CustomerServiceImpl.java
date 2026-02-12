@@ -2,8 +2,12 @@ package org.example.back_end.service.impl;
 
 import org.example.back_end.dto.CustomerDTO;
 import org.example.back_end.entity.Customer;
+import org.example.back_end.exeception.CustomException;
 import org.example.back_end.repository.CustomerRepository;
 import org.example.back_end.service.custom.CustomerService;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,41 +16,35 @@ import java.util.List;
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
     public CustomerServiceImpl(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }
 
     public void saveCustomer(CustomerDTO customerDTO) {
-        customerRepository.save(
-                new Customer(
-                        customerDTO.getCId(),
-                        customerDTO.getCName(),
-                        customerDTO.getCAddress(),
-                        customerDTO.getCAge()
-                ));
+        customerRepository.save(modelMapper.map(customerDTO, Customer.class));
     }
 
     @Override
     public void updateCustomer(CustomerDTO customerDTO) {
-        customerRepository.save(
-                new Customer(
-                        customerDTO.getCId(),
-                        customerDTO.getCName(),
-                        customerDTO.getCAddress(),
-                        customerDTO.getCAge()
-                ));
+        if (customerDTO == null) {
+            throw new CustomException("Customer ID is null");
+        }
+        customerRepository.save(modelMapper.map(customerDTO, Customer.class));
     }
 
     @Override
-    public List<Customer> getCustomerData() {
-         List<Customer> customerList = customerRepository.findAll();
+    public List<CustomerDTO> getCustomerData() {
+        List<Customer> list = customerRepository.findAll();
 
-         return customerList;
+        return modelMapper.map(list, new TypeToken<List<CustomerDTO>>() {
+        }.getType());
     }
 
     @Override
     public void deleteCustomer(CustomerDTO customerDTO) {
-        customerRepository.deleteById(customerDTO.getCId());
+        customerRepository.deleteById(Integer.parseInt(String.valueOf(customerDTO.getCId())));
     }
 }

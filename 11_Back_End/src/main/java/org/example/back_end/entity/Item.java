@@ -16,6 +16,7 @@ public class Item {
     @Id
     private  String itemId;
     private String itemName;
-    private String itemPrice;
-    private String itemQty;
+    private int itemQty;
+    private double itemPrice;
+
 }

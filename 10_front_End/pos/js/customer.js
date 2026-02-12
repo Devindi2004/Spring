@@ -1,49 +1,56 @@
+const BASE_URL = "http://localhost:8080/api/v1/customer";
+
 $(document).ready(function () {
 
-    getAllCustomers();
-
+    loadCustomers();
 
     $(document).on("click", "#customerTable tr", function () {
 
-        let cId = $(this).find("td:eq(0)").text();
-        let cName = $(this).find("td:eq(1)").text();
-        let cAddress = $(this).find("td:eq(2)").text();
-        let cAge = $(this).find("td:eq(3)").text();
+        let columns = $(this).children("td");
 
-        $("#customerId").val(cId);
-        $("#customerName").val(cName);
-        $("#customerAddress").val(cAddress);
-        $("#customerAge").val(cAge);
+        if (columns.length === 0) return;
+
+        $("#customerId").val(columns.eq(0).text());
+        $("#customerName").val(columns.eq(1).text());
+        $("#customerAddress").val(columns.eq(2).text());
+        $("#customerAge").val(columns.eq(3).text());
     });
-
 });
 
 function saveCustomer() {
 
-    let customer = {
-        cId: $("#customerId").val(),
-        cName: $("#customerName").val(),
-        cAddress: $("#customerAddress").val(),
-        cAge: $("#customerAge").val()
-    };
+    let name = $("#customerName").val().trim();
+    let address = $("#customerAddress").val().trim();
+    let age = $("#customerAge").val();
 
-    if (!customer.cId || !customer.cName) {
-        alert("Customer ID & Name required!");
+    if (!name) {
+        alert("Customer Name is required!");
         return;
     }
 
+    if (!age || isNaN(age) || age <= 0) {
+        alert("Valid Age is required!");
+        return;
+    }
+
+    let customer = {
+        cName: name,
+        cAddress: address,
+        cAge: parseInt(age)
+    };
+
     $.ajax({
-        url: "http://localhost:8080/api/v1/customer",
-        method: "POST",
+        url: BASE_URL,
+        type: "POST",
         contentType: "application/json",
         data: JSON.stringify(customer),
         success: function () {
             alert("Customer Saved Successfully");
             resetForm();
-            getAllCustomers();
+            loadCustomers();
         },
         error: function (err) {
-            console.log(err);
+            console.error(err);
             alert("Error Saving Customer");
         }
     });
@@ -51,30 +58,45 @@ function saveCustomer() {
 
 function updateCustomer() {
 
-    let customer = {
-        cId: $("#customerId").val(),
-        cName: $("#customerName").val(),
-        cAddress: $("#customerAddress").val(),
-        cAge: $("#customerAge").val()
-    };
+    let cId = $("#customerId").val();
+    let name = $("#customerName").val().trim();
+    let address = $("#customerAddress").val().trim();
+    let age = $("#customerAge").val();
 
-    if (!customer.cId) {
-        alert("Select Customer to Update");
+    if (!cId) {
+        alert("Select a customer first!");
         return;
     }
 
+    if (!name) {
+        alert("Customer Name is required!");
+        return;
+    }
+
+    if (!age || isNaN(age) || age <= 0) {
+        alert("Valid Age is required!");
+        return;
+    }
+
+    let customer = {
+        cId: parseInt(cId),
+        cName: name,
+        cAddress: address,
+        cAge: parseInt(age)
+    };
+
     $.ajax({
-        url: "http://localhost:8080/api/v1/customer",
-        method: "PUT",   // FIXED (was POST before)
+        url: BASE_URL,
+        type: "PUT",
         contentType: "application/json",
         data: JSON.stringify(customer),
         success: function () {
             alert("Customer Updated Successfully");
             resetForm();
-            getAllCustomers();
+            loadCustomers();
         },
         error: function (err) {
-            console.log(err);
+            console.error(err);
             alert("Error Updating Customer");
         }
     });
@@ -85,37 +107,55 @@ function deleteCustomer() {
     let cId = $("#customerId").val();
 
     if (!cId) {
-        alert("Select Customer to Delete");
+        alert("Select a customer first!");
+        return;
+    }
+
+    if (!confirm("Are you sure you want to delete this customer?")) {
         return;
     }
 
     $.ajax({
-        url: "http://localhost:8080/api/v1/customer",
-        method: "DELETE",
+        url: BASE_URL,
+        type: "DELETE",
         contentType: "application/json",
-        data: JSON.stringify({ cId: cId }),
+        data: JSON.stringify({ cId: parseInt(cId) }),
         success: function () {
             alert("Customer Deleted Successfully");
             resetForm();
-            getAllCustomers();
+            loadCustomers();
         },
         error: function (err) {
-            console.log(err);
+            console.error(err);
             alert("Error Deleting Customer");
         }
     });
 }
 
-function getAllCustomers() {
 
-    $("#customerTable").empty();  // FIXED clearing
+function loadCustomers() {
+
+    $("#customerTable").empty();
 
     $.ajax({
-        url: "http://localhost:8080/api/v1/customer",
-        method: "GET",
+        url: BASE_URL,
+        type: "GET",
         success: function (res) {
 
-            for (let c of res) {
+            let customers = [];
+
+            if (res.data) {
+                customers = res.data;
+            } else {
+                customers = res;
+            }
+
+            if (!Array.isArray(customers)) {
+                console.error("Unexpected response format", res);
+                return;
+            }
+
+            customers.forEach(function (c) {
 
                 let row = `
                     <tr>
@@ -127,10 +167,10 @@ function getAllCustomers() {
                 `;
 
                 $("#customerTable").append(row);
-            }
+            });
         },
         error: function (err) {
-            console.log(err);
+            console.error(err);
             alert("Failed to Load Customers");
         }
     });

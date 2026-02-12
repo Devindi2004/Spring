@@ -6,8 +6,8 @@ $(document).ready(function () {
 
         let itemId = $(this).find("td:eq(0)").text();
         let itemName = $(this).find("td:eq(1)").text();
-        let itemPrice = $(this).find("td:eq(3)").text();
-        let itemQty = $(this).find("td:eq(2)").text();
+        let itemPrice = $(this).find("td:eq(2)").text();
+        let itemQty = $(this).find("td:eq(3)").text();
 
         $("#itemId").val(itemId);
         $("#itemName").val(itemName);
@@ -22,8 +22,8 @@ function saveItem() {
     let item = {
         itemId: $("#itemId").val(),
         itemName: $("#itemName").val(),
-        itemPrice: $("#itemPrice").val(),
-        itemQty: $("#itemQty").val()
+        itemPrice: parseFloat($("#itemPrice").val()),
+        itemQty: parseInt($("#itemQty").val())
     };
 
     if (!item.itemId || !item.itemName) {
@@ -48,13 +48,14 @@ function saveItem() {
     });
 }
 
+
 function updateItem() {
 
     let item = {
         itemId: $("#itemId").val(),
         itemName: $("#itemName").val(),
-        itemPrice: $("#itemPrice").val(),
-        itemQty: $("#itemQty").val()
+        itemPrice: parseFloat($("#itemPrice").val()),
+        itemQty: parseInt($("#itemQty").val())
     };
 
     if (!item.itemId) {
@@ -79,6 +80,7 @@ function updateItem() {
     });
 }
 
+
 function deleteItem() {
 
     let itemId = $("#itemId").val();
@@ -89,10 +91,8 @@ function deleteItem() {
     }
 
     $.ajax({
-        url: "http://localhost:8080/api/v1/item",
+        url: "http://localhost:8080/api/v1/item/" + itemId, // ✅ FIXED
         method: "DELETE",
-        contentType: "application/json",
-        data: JSON.stringify({ itemId: itemId }),
         success: function () {
             alert("Item Deleted Successfully");
             resetForm();
@@ -104,6 +104,7 @@ function deleteItem() {
         }
     });
 }
+
 
 function getAllItems() {
 
@@ -134,6 +135,7 @@ function getAllItems() {
         }
     });
 }
+
 
 function resetForm() {
     $("#itemId").val("");
