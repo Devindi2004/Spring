@@ -22,12 +22,13 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void saveItem(ItemDTO itemDTO) {
+        // Save karaddi auto-generate nisa itemId 0 yawanna
         itemRepository.save(modelMapper.map(itemDTO, Item.class));
     }
 
     @Override
     public void updateItem(ItemDTO itemDTO) {
-        if (!itemRepository.existsById(Integer.valueOf(itemDTO.getItemId()))) {
+        if (!itemRepository.existsById(itemDTO.getItemId())) {
             throw new RuntimeException("Item not found");
         }
         itemRepository.save(modelMapper.map(itemDTO, Item.class));
@@ -36,11 +37,12 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<Item> getItemData() {
         List<Item> allItems = itemRepository.findAll();
+        // Return type eka ItemDTO list ekak wenna ona
         return modelMapper.map(allItems, new TypeToken<List<ItemDTO>>() {}.getType());
     }
 
     @Override
-    public void deleteItem(String id) {
-        itemRepository.deleteById(Integer.valueOf(id));
+    public void deleteItem(int id) {
+        itemRepository.deleteById(id);
     }
 }

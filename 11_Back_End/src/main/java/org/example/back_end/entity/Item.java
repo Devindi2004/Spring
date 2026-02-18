@@ -1,7 +1,11 @@
 package org.example.back_end.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.List;
 
 @Entity
@@ -11,12 +15,12 @@ import java.util.List;
 @NoArgsConstructor
 public class Item {
     @Id
-    private String itemId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int itemId; // Meka INT wenna ona
     private String itemName;
     private int itemQty;
     private double itemPrice;
 
-    // Ekama item eka orders godaka thiyenna puluwan
-    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     private List<PlaceOrder> orders;
 }

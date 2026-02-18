@@ -1,16 +1,14 @@
 package org.example.back_end.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data // Getter, Setter, ToString okkoma meken enawa
 public class ItemDTO {
-    private String itemId;   // String ID (e.g., I001)
+    private int itemId; // Changed to int
     private String itemName;
     private int itemQty;
     private double itemPrice;

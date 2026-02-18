@@ -11,5 +11,5 @@ public interface ItemService {
 
     List<Item> getItemData();
 
-    void deleteItem(String itemDTO);
+    void deleteItem(int id);
 }

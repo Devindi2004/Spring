@@ -24,7 +24,7 @@ function getAllItems() {
 
 function saveItem() {
     let item = {
-        itemId: $("#itemId").val(),
+        itemId: 0, // Auto-generate nisa 0 yawanna
         itemName: $("#itemName").val(),
         itemPrice: parseFloat($("#itemPrice").val()),
         itemQty: parseInt($("#itemQty").val())
@@ -36,7 +36,22 @@ function saveItem() {
         contentType: "application/json",
         data: JSON.stringify(item),
         success: function () {
-            Swal.fire('Success!', 'Item added successfully.', 'success');
+            Swal.fire('Success!', 'Item auto-generated and saved.', 'success');
+            resetForm();
+            getAllItems();
+        }
+    });
+}
+
+function deleteItem() {
+    let itemId = $("#itemId").val();
+    if(!itemId) return Swal.fire('Error', 'Select an item!', 'error');
+
+    $.ajax({
+        url: "http://localhost:8080/api/v1/item/" + itemId,
+        method: "DELETE",
+        success: function () {
+            Swal.fire('Deleted!', 'Item removed successfully.', 'success');
             resetForm();
             getAllItems();
         }
@@ -58,19 +73,6 @@ function updateItem() {
         data: JSON.stringify(item),
         success: function () {
             Swal.fire('Updated!', 'Item details updated.', 'success');
-            resetForm();
-            getAllItems();
-        }
-    });
-}
-
-function deleteItem() {
-    let itemId = $("#itemId").val();
-    $.ajax({
-        url: "http://localhost:8080/api/v1/item/" + itemId,
-        method: "DELETE",
-        success: function () {
-            Swal.fire('Deleted!', 'Item removed successfully.', 'success');
             resetForm();
             getAllItems();
         }

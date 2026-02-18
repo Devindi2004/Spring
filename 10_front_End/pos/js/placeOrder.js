@@ -33,8 +33,8 @@ function loadItems() {
 function saveOrder() {
     let order = {
         orderId: $('#orderId').val(),
-        customerId: $('#customerId').val(),
-        itemId: $('#itemId').val(),
+        customerId: parseInt($('#customerId').val()),
+        itemId: parseInt($('#itemId').val()),
         orderQty: parseInt($('#orderQty').val()),
         orderPrice: parseFloat($('#orderPrice').val())
     };

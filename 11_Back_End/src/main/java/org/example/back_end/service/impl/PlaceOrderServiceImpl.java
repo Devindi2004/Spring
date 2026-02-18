@@ -25,30 +25,22 @@ public class PlaceOrderServiceImpl implements PlaceOrderService {
 
     @Override
     public void saveOrder(PlaceOrderDTO dto) {
-        // 1. Check Customer
-        Customer customer = customerRepository.findById(Integer.parseInt(dto.getCustomerId()))
+        Customer customer = customerRepository.findById(dto.getCustomerId())
                 .orElseThrow(() -> new RuntimeException("Customer Not Found"));
 
-        // 2. Check Item & Stock
-        Item item = itemRepository.findById(Integer.valueOf(dto.getItemId()))
+        Item item = itemRepository.findById(dto.getItemId())
                 .orElseThrow(() -> new RuntimeException("Item Not Found"));
 
-        if (item.getItemQty() < dto.getOrderQty()) {
-            throw new RuntimeException("Not Enough Stock! Available: " + item.getItemQty());
-        }
-
-        // 3. Update Stock
         item.setItemQty(item.getItemQty() - dto.getOrderQty());
         itemRepository.save(item);
 
-        // 4. Save Order (Setting Entity objects, not just IDs)
-        PlaceOrder order = new PlaceOrder();
-        order.setOrderId(dto.getOrderId());
-        order.setCustomer(customer);
-        order.setItem(item);
-        order.setOrderQty(dto.getOrderQty());
-        order.setOrderPrice(dto.getOrderPrice());
-
+        PlaceOrder order = new PlaceOrder(
+                dto.getOrderId(),
+                customer,
+                item,
+                dto.getOrderQty(),
+                dto.getOrderPrice()
+        );
         placeOrderRepository.save(order);
     }
 

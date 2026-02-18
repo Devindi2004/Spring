@@ -38,7 +38,7 @@ public class ItemController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<APIResponse<String>> deleteItem(@PathVariable String id){
+    public ResponseEntity<APIResponse<String>> deleteItem(@PathVariable int id){
         itemService.deleteItem(id);
         return new ResponseEntity<>(new APIResponse<>(200, "Item Deleted Successfully", null), HttpStatus.OK);
     }
