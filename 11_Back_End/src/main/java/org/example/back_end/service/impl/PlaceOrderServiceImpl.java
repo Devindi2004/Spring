@@ -81,9 +81,11 @@ public class PlaceOrderServiceImpl implements PlaceOrderService {
                             .map(detail -> new OrderHistoryDetailDTO(
                                     detail.getItem().getItemName(),
                                     detail.getQty(),
-                                    detail.getUnitPrice()
+                                    detail.getUnitPrice(),
+                                    detail.getItem().getItemQty()   // 🔥 current remaining stock
                             ))
                             .toList();
+
 
             // ✅ Total calculate karana clean way eka
             double total = order.getOrderDetails().stream()

@@ -3,19 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <title>POS System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600;700&display=swap" rel="stylesheet">
 
+    <style>
 
+        :root{
+            --bg-color:#f4f6f9;
+            --card-color:white;
+            --text-color:#1e1e2f;
+            --hover-gradient:linear-gradient(135deg,#667eea,#764ba2);
+        }
+
+        body.dark{
+            --bg-color:#1e1e2f;
+            --card-color:#2b2b40;
+            --text-color:white;
+            --hover-gradient:linear-gradient(135deg,#ff9966,#ff5e62);
+        }
+
+        body{
+            margin:0;
+            font-family:'Poppins', sans-serif;
+            background:var(--bg-color);
+            color:var(--text-color);
+            transition:0.4s ease;
+            height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+        }
+
+        .dashboard{
+            padding:40px;
+            border-radius:20px;
+            width:900px;
+        }
+
+        h1{
+            text-align:center;
+            margin-bottom:40px;
+            font-weight:700;
+        }
+
+        .card-box{
+            background:var(--card-color);
+            border-radius:20px;
+            padding:30px;
+            text-align:center;
+            transition:0.3s;
+            cursor:pointer;
+            box-shadow:0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .card-box:hover{
+            transform:translateY(-8px);
+            background:var(--hover-gradient);
+            color:white;
+        }
+
+        .card-box h3{
+            margin-top:15px;
+        }
+
+        .card-box a{
+            text-decoration:none;
+            color:inherit;
+        }
+
+        .icon{
+            font-size:45px;
+        }
+
+        .toggle-btn{
+            position:absolute;
+            top:20px;
+            right:30px;
+            cursor:pointer;
+            font-size:18px;
+            padding:8px 18px;
+            border-radius:50px;
+            border:none;
+            background:#764ba2;
+            color:white;
+            transition:0.3s;
+        }
+
+        .toggle-btn:hover{
+            opacity:0.8;
+        }
+
+    </style>
 </head>
 <body>
-<h1>POS SYSTEM</h1>
-<div>
-    <a href="pages/customer.html">Customer</a>
-    <a href="pages/item.html">Item</a>
-    <a href="pages/placeOrder.html">Order</a>
+
+<button class="toggle-btn" onclick="toggleMode()">🌙 Dark Mode</button>
+
+<div class="dashboard">
+    <h1>POS SYSTEM DASHBOARD</h1>
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <a href="pages/customer.html">
+                <div class="card-box">
+                    <div class="icon">👤</div>
+                    <h3>Customer</h3>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a href="pages/item.html">
+                <div class="card-box">
+                    <div class="icon">📦</div>
+                    <h3>Item</h3>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a href="pages/placeOrder.html">
+                <div class="card-box">
+                    <div class="icon">🛒</div>
+                    <h3>Order</h3>
+                </div>
+            </a>
+        </div>
+
+    </div>
 </div>
 
-<script src="js/customer.js"></script>
+<script>
+
+    function toggleMode(){
+        document.body.classList.toggle("dark");
+
+        let btn = document.querySelector(".toggle-btn");
+
+        if(document.body.classList.contains("dark")){
+            btn.innerHTML = "☀ Light Mode";
+        }else{
+            btn.innerHTML = "🌙 Dark Mode";
+        }
+    }
+
+</script>
+
 </body>
 </html>
