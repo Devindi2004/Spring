@@ -11,8 +11,8 @@ import lombok.Setter;
 @Setter
 public class PlaceOrderDTO {
     private String orderId;
-    private String customerId;
-    private String itemId;
+    private String customerId; // Customer entity eke ID eka
+    private String itemId;     // Item entity eke ID eka
     private Integer orderQty;
-    private Double orderPrice;
+    private Double orderPrice; // Total price eka
 }

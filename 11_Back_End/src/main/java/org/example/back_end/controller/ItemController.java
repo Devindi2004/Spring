@@ -4,6 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.example.back_end.dto.ItemDTO;
 import org.example.back_end.entity.Item;
 import org.example.back_end.service.custom.ItemService;
+import org.example.back_end.util.APIResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,25 +17,29 @@ import java.util.List;
 @CrossOrigin
 public class ItemController {
 
-    public final ItemService itemService;
+    private final ItemService itemService;
 
     @PostMapping
-    public void saveItem(@RequestBody ItemDTO itemDTO){
+    public ResponseEntity<APIResponse<String>> saveItem(@RequestBody ItemDTO itemDTO){
         itemService.saveItem(itemDTO);
+        return new ResponseEntity<>(new APIResponse<>(201, "Item Saved Successfully", null), HttpStatus.CREATED);
     }
 
     @PutMapping
-    public  void updateItem(@RequestBody ItemDTO itemDTO){
+    public ResponseEntity<APIResponse<String>> updateItem(@RequestBody ItemDTO itemDTO){
         itemService.updateItem(itemDTO);
+        return new ResponseEntity<>(new APIResponse<>(200, "Item Updated Successfully", null), HttpStatus.OK);
     }
 
     @GetMapping
-    public List<Item> getItem(){
-        return itemService.getItemData();
+    public ResponseEntity<APIResponse<List<Item>>> getAllItems(){
+        // Note: ItemService eke return type eka ItemDTO list ekak wenna hadala thiyenne
+        return new ResponseEntity<>(new APIResponse<>(200, "Success", itemService.getItemData()), HttpStatus.OK);
     }
 
-    @DeleteMapping
-    public  void deleteItem(@RequestBody ItemDTO itemDTO){
-        itemService.deleteItem(itemDTO);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<APIResponse<String>> deleteItem(@PathVariable String id){
+        itemService.deleteItem(id);
+        return new ResponseEntity<>(new APIResponse<>(200, "Item Deleted Successfully", null), HttpStatus.OK);
     }
 }

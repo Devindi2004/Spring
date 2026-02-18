@@ -1,21 +1,15 @@
 package org.example.back_end.dto;
 
-
-import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.processing.Pattern;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data // Getter, Setter, ToString okkoma meken enawa
 public class CustomerDTO {
     private int cId;
     private String cName;
     private String cAddress;
-    private String cAge;
-
+    private int cAge;
 }

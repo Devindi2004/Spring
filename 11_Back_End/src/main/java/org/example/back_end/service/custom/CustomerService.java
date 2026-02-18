@@ -10,5 +10,5 @@ public interface CustomerService {
 
     List<CustomerDTO> getCustomerData();
 
-    void deleteCustomer(CustomerDTO customerDTO);
+    void deleteCustomer(int customerDTO);
 }

@@ -1,58 +1,46 @@
 package org.example.back_end.service.impl;
 
-import org.example.back_end.dto.CustomerDTO;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.example.back_end.dto.ItemDTO;
-import org.example.back_end.entity.Customer;
 import org.example.back_end.entity.Item;
-import org.example.back_end.repository.CustomerRepository;
 import org.example.back_end.repository.ItemRepository;
 import org.example.back_end.service.custom.ItemService;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
-
-    public ItemServiceImpl(ItemRepository itemRepository) {
-        this.itemRepository = itemRepository;
-    }
+    private final ModelMapper modelMapper;
 
     @Override
     public void saveItem(ItemDTO itemDTO) {
-        itemRepository.save(
-                new Item(
-                        itemDTO.getItemId(),
-                        itemDTO.getItemName(),
-                        itemDTO.getItemQty(),
-                        itemDTO.getItemPrice()
-                ));
-
+        itemRepository.save(modelMapper.map(itemDTO, Item.class));
     }
 
     @Override
     public void updateItem(ItemDTO itemDTO) {
-        itemRepository.save(
-                new Item(
-                        itemDTO.getItemId(),
-                        itemDTO.getItemName(),
-                        itemDTO.getItemQty(),
-                        itemDTO.getItemPrice()
-                ));
-
+        if (!itemRepository.existsById(Integer.valueOf(itemDTO.getItemId()))) {
+            throw new RuntimeException("Item not found");
+        }
+        itemRepository.save(modelMapper.map(itemDTO, Item.class));
     }
 
     @Override
     public List<Item> getItemData() {
-        List<Item> itemList = itemRepository.findAll();
-
-        return itemList;
+        List<Item> allItems = itemRepository.findAll();
+        return modelMapper.map(allItems, new TypeToken<List<ItemDTO>>() {}.getType());
     }
 
     @Override
-    public void deleteItem(ItemDTO itemDTO) {
-        itemRepository.deleteById(itemDTO.getItemId());
+    public void deleteItem(String id) {
+        itemRepository.deleteById(Integer.valueOf(id));
     }
 }

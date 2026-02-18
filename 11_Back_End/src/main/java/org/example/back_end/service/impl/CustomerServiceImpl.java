@@ -1,50 +1,52 @@
 package org.example.back_end.service.impl;
 
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.example.back_end.dto.CustomerDTO;
 import org.example.back_end.entity.Customer;
-import org.example.back_end.exeception.CustomException;
 import org.example.back_end.repository.CustomerRepository;
 import org.example.back_end.service.custom.CustomerService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
-    public CustomerServiceImpl(CustomerRepository customerRepository) {
-        this.customerRepository = customerRepository;
-    }
-
+    @Override
     public void saveCustomer(CustomerDTO customerDTO) {
-        customerRepository.save(modelMapper.map(customerDTO, Customer.class));
+        // Relationships nisa manual mapping ho ModelMapper settings check karanna
+        Customer customer = modelMapper.map(customerDTO, Customer.class);
+        // Relationships null widiyata save wenna hadanna (Entity eke cascade nisa)
+        customerRepository.save(customer);
     }
 
     @Override
     public void updateCustomer(CustomerDTO customerDTO) {
-        if (customerDTO == null) {
-            throw new CustomException("Customer ID is null");
+        if (!customerRepository.existsById(customerDTO.getCId())) {
+            throw new RuntimeException("Customer not found with ID: " + customerDTO.getCId());
         }
         customerRepository.save(modelMapper.map(customerDTO, Customer.class));
     }
 
     @Override
     public List<CustomerDTO> getCustomerData() {
-        List<Customer> list = customerRepository.findAll();
-
-        return modelMapper.map(list, new TypeToken<List<CustomerDTO>>() {
-        }.getType());
+        List<Customer> allCustomers = customerRepository.findAll();
+        return modelMapper.map(allCustomers, new TypeToken<List<CustomerDTO>>() {}.getType());
     }
 
     @Override
-    public void deleteCustomer(CustomerDTO customerDTO) {
-        customerRepository.deleteById(Integer.parseInt(String.valueOf(customerDTO.getCId())));
+    public void deleteCustomer(int id) {
+        if (!customerRepository.existsById(id)) {
+            throw new RuntimeException("Customer not found");
+        }
+        customerRepository.deleteById(id);
     }
 }

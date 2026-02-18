@@ -10,9 +10,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ItemDTO {
-    private  String itemId;
+    private String itemId;   // String ID (e.g., I001)
     private String itemName;
     private int itemQty;
     private double itemPrice;
-
 }

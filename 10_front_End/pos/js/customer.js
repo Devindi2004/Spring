@@ -1,184 +1,104 @@
-const BASE_URL = "http://localhost:8080/api/v1/customer";
-
 $(document).ready(function () {
-
-    loadCustomers();
+    getAllCustomers();
 
     $(document).on("click", "#customerTable tr", function () {
-
-        let columns = $(this).children("td");
-
-        if (columns.length === 0) return;
-
-        $("#customerId").val(columns.eq(0).text());
-        $("#customerName").val(columns.eq(1).text());
-        $("#customerAddress").val(columns.eq(2).text());
-        $("#customerAge").val(columns.eq(3).text());
+        $("#customerId").val($(this).find("td:eq(0)").text());
+        $("#customerName").val($(this).find("td:eq(1)").text());
+        $("#customerAddress").val($(this).find("td:eq(2)").text());
+        $("#customerAge").val($(this).find("td:eq(3)").text());
     });
 });
 
+function getAllCustomers() {
+    $("#customerTable").empty();
+    $.ajax({
+        url: "http://localhost:8080/api/v1/customer",
+        method: "GET",
+        success: function (res) {
+            for (let c of res.data) {
+                $("#customerTable").append(`<tr><td>${c.cId}</td><td>${c.cName}</td><td>${c.cAddress}</td><td>${c.cAge}</td></tr>`);
+            }
+        }
+    });
+}
+
 function saveCustomer() {
-
-    let name = $("#customerName").val().trim();
-    let address = $("#customerAddress").val().trim();
-    let age = $("#customerAge").val();
-
-    if (!name) {
-        alert("Customer Name is required!");
-        return;
-    }
-
-    if (!age || isNaN(age) || age <= 0) {
-        alert("Valid Age is required!");
-        return;
-    }
-
-    let customer = {
-        cName: name,
-        cAddress: address,
-        cAge: parseInt(age)
+    // Data object eka DTO ekata 100% match wenna ona
+    let customerDTO = {
+        cId: 0, // Auto-increment nisa 0 yawanna
+        cName: $("#customerName").val(),
+        cAddress: $("#customerAddress").val(),
+        cAge: parseInt($("#customerAge").val())
     };
 
+    // Validation (SweetAlert2)
+    if (!customerDTO.cName || !customerDTO.cAddress) {
+        Swal.fire('Required!', 'Please fill Name and Address', 'warning');
+        return;
+    }
+
     $.ajax({
-        url: BASE_URL,
-        type: "POST",
+        url: "http://localhost:8080/api/v1/customer",
+        method: "POST",
         contentType: "application/json",
-        data: JSON.stringify(customer),
-        success: function () {
-            alert("Customer Saved Successfully");
+        data: JSON.stringify(customerDTO),
+        success: function (res) {
+            Swal.fire('Saved!', 'Customer has been added.', 'success');
             resetForm();
-            loadCustomers();
+            getAllCustomers();
         },
-        error: function (err) {
-            console.error(err);
-            alert("Error Saving Customer");
+        error: function (ob) {
+            // 400 Bad Request error eke details meken ganna puluwan
+            console.log(ob);
+            let message = ob.responseJSON ? ob.responseJSON.message : "Internal Error";
+            Swal.fire('Error 400', 'Invalid Data: ' + message, 'error');
         }
     });
 }
 
 function updateCustomer() {
-
-    let cId = $("#customerId").val();
-    let name = $("#customerName").val().trim();
-    let address = $("#customerAddress").val().trim();
-    let age = $("#customerAge").val();
-
-    if (!cId) {
-        alert("Select a customer first!");
-        return;
-    }
-
-    if (!name) {
-        alert("Customer Name is required!");
-        return;
-    }
-
-    if (!age || isNaN(age) || age <= 0) {
-        alert("Valid Age is required!");
-        return;
-    }
-
     let customer = {
-        cId: parseInt(cId),
-        cName: name,
-        cAddress: address,
-        cAge: parseInt(age)
+        cId: $("#customerId").val(),
+        cName: $("#customerName").val(),
+        cAddress: $("#customerAddress").val(),
+        cAge: $("#customerAge").val()
     };
 
     $.ajax({
-        url: BASE_URL,
-        type: "PUT",
+        url: "http://localhost:8080/api/v1/customer",
+        method: "PUT",
         contentType: "application/json",
         data: JSON.stringify(customer),
         success: function () {
-            alert("Customer Updated Successfully");
+            Swal.fire('Updated!', 'Customer updated successfully.', 'success');
             resetForm();
-            loadCustomers();
-        },
-        error: function (err) {
-            console.error(err);
-            alert("Error Updating Customer");
+            getAllCustomers();
         }
     });
 }
 
 function deleteCustomer() {
-
     let cId = $("#customerId").val();
-
-    if (!cId) {
-        alert("Select a customer first!");
-        return;
-    }
-
-    if (!confirm("Are you sure you want to delete this customer?")) {
-        return;
-    }
-
-    $.ajax({
-        url: BASE_URL,
-        type: "DELETE",
-        contentType: "application/json",
-        data: JSON.stringify({ cId: parseInt(cId) }),
-        success: function () {
-            alert("Customer Deleted Successfully");
-            resetForm();
-            loadCustomers();
-        },
-        error: function (err) {
-            console.error(err);
-            alert("Error Deleting Customer");
-        }
-    });
-}
-
-
-function loadCustomers() {
-
-    $("#customerTable").empty();
-
-    $.ajax({
-        url: BASE_URL,
-        type: "GET",
-        success: function (res) {
-
-            let customers = [];
-
-            if (res.data) {
-                customers = res.data;
-            } else {
-                customers = res;
-            }
-
-            if (!Array.isArray(customers)) {
-                console.error("Unexpected response format", res);
-                return;
-            }
-
-            customers.forEach(function (c) {
-
-                let row = `
-                    <tr>
-                        <td>${c.cId}</td>
-                        <td>${c.cName}</td>
-                        <td>${c.cAddress}</td>
-                        <td>${c.cAge}</td>
-                    </tr>
-                `;
-
-                $("#customerTable").append(row);
+    Swal.fire({
+        title: 'Are you sure?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "http://localhost:8080/api/v1/customer/" + cId,
+                method: "DELETE",
+                success: function () {
+                    Swal.fire('Deleted!', 'Customer has been deleted.', 'success');
+                    resetForm();
+                    getAllCustomers();
+                }
             });
-        },
-        error: function (err) {
-            console.error(err);
-            alert("Failed to Load Customers");
         }
     });
 }
 
 function resetForm() {
-    $("#customerId").val("");
-    $("#customerName").val("");
-    $("#customerAddress").val("");
-    $("#customerAge").val("");
+    $("#customerId, #customerName, #customerAddress, #customerAge").val("");
 }

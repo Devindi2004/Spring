@@ -1,23 +1,27 @@
 package org.example.back_end.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class PlaceOrder {
     @Id
     private String orderId;
-    private String customerId;
-    private String itemId;
+
+    // Godak orders ekama customer kenekuta ayithi wenna puluwan
+    @ManyToOne
+    @JoinColumn(name = "customer_id", referencedColumnName = "cId", nullable = false)
+    private Customer customer;
+
+    // Godak orders wala ekama item eka thiyenna puluwan
+    @ManyToOne
+    @JoinColumn(name = "item_id", referencedColumnName = "itemId", nullable = false)
+    private Item item;
+
     private Integer orderQty;
     private Double orderPrice;
-
 }
