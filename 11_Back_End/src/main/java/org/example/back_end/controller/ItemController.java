@@ -11,16 +11,18 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/item")
+@RestController
+@RequestMapping("/api/v1/item")
 @CrossOrigin
+
 public class ItemController {
 
     private final ItemService itemService;
 
     @PostMapping
     public ResponseEntity<APIResponse<String>> saveItem(@RequestBody ItemDTO itemDTO){
+        System.out.println(itemDTO.getItemId()+""+itemDTO.getItemName());
         itemService.saveItem(itemDTO);
         return new ResponseEntity<>(new APIResponse<>(201, "Item Saved Successfully", null), HttpStatus.CREATED);
     }
