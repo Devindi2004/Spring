@@ -2,7 +2,7 @@ package org.example.back_end.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.back_end.dto.PlaceOrderDTO;
-import org.example.back_end.entity.PlaceOrder;
+import org.example.back_end.dto.PlaceOrderHistoryDTO;
 import org.example.back_end.service.custom.PlaceOrderService;
 import org.example.back_end.util.APIResponse;
 import org.springframework.http.HttpStatus;
@@ -19,26 +19,44 @@ public class PlaceOrderController {
 
     private final PlaceOrderService placeOrderService;
 
+    // ================= SAVE =================
     @PostMapping
     public ResponseEntity<APIResponse<String>> saveOrder(@RequestBody PlaceOrderDTO dto){
         placeOrderService.saveOrder(dto);
-        return new ResponseEntity<>(new APIResponse<>(201, "Order Placed Successfully", null), HttpStatus.CREATED);
+        return new ResponseEntity<>(
+                new APIResponse<>(201, "Order Placed Successfully", null),
+                HttpStatus.CREATED
+        );
     }
 
+    // ================= UPDATE =================
     @PutMapping
     public ResponseEntity<APIResponse<String>> updateOrder(@RequestBody PlaceOrderDTO dto){
         placeOrderService.updateOrder(dto);
-        return new ResponseEntity<>(new APIResponse<>(200, "Order Updated Successfully", null), HttpStatus.OK);
+        return new ResponseEntity<>(
+                new APIResponse<>(200, "Order Updated Successfully", null),
+                HttpStatus.OK
+        );
     }
 
+    // ================= GET ALL (FIXED) =================
     @GetMapping
-    public ResponseEntity<APIResponse<List<PlaceOrder>>> getAllOrders(){
-        return new ResponseEntity<>(new APIResponse<>(200, "Success", placeOrderService.getOrderData()), HttpStatus.OK);
+    public ResponseEntity<APIResponse<List<PlaceOrderHistoryDTO>>> getAllOrders(){
+
+        List<PlaceOrderHistoryDTO> orders = placeOrderService.getOrderData();
+
+        return new ResponseEntity<>(
+                new APIResponse<>(200, "Success", orders),
+                HttpStatus.OK
+        );
     }
 
+    // ================= DELETE =================
     @DeleteMapping("/{id}")
-    public ResponseEntity<APIResponse<String>> deleteOrder(@PathVariable String id){
+    public ResponseEntity<APIResponse<String>> deleteOrder(@PathVariable int id) {
         placeOrderService.deleteOrderById(id);
-        return new ResponseEntity<>(new APIResponse<>(200, "Order Deleted Successfully", null), HttpStatus.OK);
+        return ResponseEntity.ok(
+                new APIResponse<>(200, "Order Deleted Successfully", null)
+        );
     }
 }

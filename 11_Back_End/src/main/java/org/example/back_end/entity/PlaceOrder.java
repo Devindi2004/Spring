@@ -1,33 +1,24 @@
 package org.example.back_end.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.example.back_end.entity.Customer;
-import org.example.back_end.entity.Item;
+import com.fasterxml.jackson.annotation.JsonManagedReference; // Meka import karanna
+import jakarta.persistence.*;
+import lombok.*;
+import java.util.List;
 
 @Entity
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter @Setter
+@AllArgsConstructor @NoArgsConstructor
 public class PlaceOrder {
     @Id
-    private String orderId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int orderId;
+    private String date;
 
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    @ManyToOne
-    @JoinColumn(name = "item_id", nullable = false) // Meka Item entity eke int ID ekata map wei
-    private Item item;
-
-    private Integer orderQty;
-    private Double orderPrice;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @JsonManagedReference // Meka thamai loop eka nawaththanne
+    private List<OrderDetail> orderDetails;
 }

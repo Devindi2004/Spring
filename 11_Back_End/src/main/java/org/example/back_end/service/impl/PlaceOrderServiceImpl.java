@@ -2,9 +2,13 @@ package org.example.back_end.service.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.example.back_end.dto.OrderDetailDTO;
+import org.example.back_end.dto.OrderHistoryDetailDTO;
 import org.example.back_end.dto.PlaceOrderDTO;
+import org.example.back_end.dto.PlaceOrderHistoryDTO;
 import org.example.back_end.entity.Customer;
 import org.example.back_end.entity.Item;
+import org.example.back_end.entity.OrderDetail;
 import org.example.back_end.entity.PlaceOrder;
 import org.example.back_end.repository.CustomerRepository;
 import org.example.back_end.repository.ItemRepository;
@@ -12,6 +16,8 @@ import org.example.back_end.repository.PlaceOrderRepository;
 import org.example.back_end.service.custom.PlaceOrderService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,63 +29,103 @@ public class PlaceOrderServiceImpl implements PlaceOrderService {
     private final CustomerRepository customerRepository;
     private final ItemRepository itemRepository;
 
+    // ================= SAVE ORDER =================
+
     @Override
     public void saveOrder(PlaceOrderDTO dto) {
-        Customer customer = customerRepository.findById(dto.getCustomerId())
+
+        Customer customer = customerRepository
+                .findById(dto.getCustomerId())
                 .orElseThrow(() -> new RuntimeException("Customer Not Found"));
 
-        Item item = itemRepository.findById(dto.getItemId())
-                .orElseThrow(() -> new RuntimeException("Item Not Found"));
+        PlaceOrder order = new PlaceOrder();
+        order.setCustomer(customer);
+        order.setDate(LocalDate.now().toString());
 
-        item.setItemQty(item.getItemQty() - dto.getOrderQty());
-        itemRepository.save(item);
+        List<OrderDetail> details = new ArrayList<>();
 
-        PlaceOrder order = new PlaceOrder(
-                dto.getOrderId(),
-                customer,
-                item,
-                dto.getOrderQty(),
-                dto.getOrderPrice()
-        );
+        for (OrderDetailDTO itemDto : dto.getItems()) {
+
+            Item item = itemRepository
+                    .findById(itemDto.getItemId())
+                    .orElseThrow(() -> new RuntimeException("Item Not Found"));
+
+            // Update stock
+            item.setItemQty(item.getItemQty() - itemDto.getQty());
+            itemRepository.save(item);
+
+            OrderDetail detail = new OrderDetail();
+            detail.setOrder(order);
+            detail.setItem(item);
+            detail.setQty(itemDto.getQty());
+            detail.setUnitPrice(itemDto.getUnitPrice());
+
+            details.add(detail);
+        }
+
+        order.setOrderDetails(details);
         placeOrderRepository.save(order);
     }
 
+    // ================= GET HISTORY (FIXED) =================
+
     @Override
-    public void updateOrder(PlaceOrderDTO dto) {
-        PlaceOrder existingOrder = placeOrderRepository.findById(dto.getOrderId())
-                .orElseThrow(() -> new RuntimeException("Order Not Found"));
+    public List<PlaceOrderHistoryDTO> getOrderData() {
 
-        // Revert old stock before applying new order quantity
-        Item item = existingOrder.getItem();
-        item.setItemQty(item.getItemQty() + existingOrder.getOrderQty());
+        List<PlaceOrder> orders = placeOrderRepository.findAll();
 
-        if (item.getItemQty() < dto.getOrderQty()) {
-            throw new RuntimeException("Not Enough Stock for Update");
-        }
+        return orders.stream().map(order -> {
 
-        item.setItemQty(item.getItemQty() - dto.getOrderQty());
-        itemRepository.save(item);
+            List<OrderHistoryDetailDTO> items =
+                    order.getOrderDetails().stream()
+                            .map(detail -> new OrderHistoryDetailDTO(
+                                    detail.getItem().getItemName(),
+                                    detail.getQty(),
+                                    detail.getUnitPrice()
+                            ))
+                            .toList();
 
-        existingOrder.setOrderQty(dto.getOrderQty());
-        existingOrder.setOrderPrice(dto.getOrderPrice());
-        placeOrderRepository.save(existingOrder);
+            // ✅ Total calculate karana clean way eka
+            double total = order.getOrderDetails().stream()
+                    .mapToDouble(detail -> detail.getQty() * detail.getUnitPrice())
+                    .sum();
+
+            return new PlaceOrderHistoryDTO(
+                    order.getOrderId(),
+                    order.getDate(),
+                    order.getCustomer().getCName(),
+                    items,
+                    total
+            );
+
+        }).toList();
     }
 
-    @Override
-    public List<PlaceOrder> getOrderData() {
-        return placeOrderRepository.findAll();
-    }
+
+
+    // ================= DELETE ORDER =================
 
     @Override
-    public void deleteOrderById(String id) {
+    public void deleteOrderById(int id) {
+
         PlaceOrder order = placeOrderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order Not Found"));
 
-        // Revert stock when order is deleted
-        Item item = order.getItem();
-        item.setItemQty(item.getItemQty() + order.getOrderQty());
-        itemRepository.save(item);
+        for (OrderDetail detail : order.getOrderDetails()) {
+            Item item = detail.getItem();
+            item.setItemQty(item.getItemQty() + detail.getQty());
+            itemRepository.save(item);
+        }
 
         placeOrderRepository.deleteById(id);
+    }
+
+    // ================= UPDATE ORDER =================
+
+    @Override
+    public void updateOrder(PlaceOrderDTO dto) {
+
+        deleteOrderById(dto.getOrderId());
+        saveOrder(dto);
     }
 }
