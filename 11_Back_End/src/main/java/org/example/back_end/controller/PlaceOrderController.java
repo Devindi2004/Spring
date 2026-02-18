@@ -19,7 +19,6 @@ public class PlaceOrderController {
 
     private final PlaceOrderService placeOrderService;
 
-    // ================= SAVE =================
     @PostMapping
     public ResponseEntity<APIResponse<String>> saveOrder(@RequestBody PlaceOrderDTO dto){
         placeOrderService.saveOrder(dto);
@@ -29,7 +28,6 @@ public class PlaceOrderController {
         );
     }
 
-    // ================= UPDATE =================
     @PutMapping
     public ResponseEntity<APIResponse<String>> updateOrder(@RequestBody PlaceOrderDTO dto){
         placeOrderService.updateOrder(dto);
@@ -39,7 +37,6 @@ public class PlaceOrderController {
         );
     }
 
-    // ================= GET ALL (FIXED) =================
     @GetMapping
     public ResponseEntity<APIResponse<List<PlaceOrderHistoryDTO>>> getAllOrders(){
 
@@ -51,7 +48,6 @@ public class PlaceOrderController {
         );
     }
 
-    // ================= DELETE =================
     @DeleteMapping("/{id}")
     public ResponseEntity<APIResponse<String>> deleteOrder(@PathVariable int id) {
         placeOrderService.deleteOrderById(id);

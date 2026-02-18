@@ -1,6 +1,6 @@
 package org.example.back_end.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference; // Meka import karanna
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,7 +14,7 @@ public class OrderDetail {
 
     @ManyToOne
     @JoinColumn( nullable = false)
-    @JsonBackReference // Meka nisa JSON eka ayemath Order ekata yana eka nawathinawa
+    @JsonBackReference
     private PlaceOrder order;
 
     @ManyToOne

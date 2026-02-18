@@ -23,7 +23,6 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public void saveItem(ItemDTO itemDTO) {
         System.out.println(itemDTO.getItemId()+" "+itemDTO.getItemName());
-        // Save karaddi auto-generate nisa itemId 0 yawanna
         itemRepository.save(modelMapper.map(itemDTO, Item.class));
     }
 
@@ -38,7 +37,6 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<Item> getItemData() {
         List<Item> allItems = itemRepository.findAll();
-        // Return type eka ItemDTO list ekak wenna ona
         return modelMapper.map(allItems, new TypeToken<List<ItemDTO>>() {}.getType());
     }
 

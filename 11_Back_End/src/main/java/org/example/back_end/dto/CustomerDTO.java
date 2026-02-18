@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data // Getter, Setter, ToString okkoma meken enawa
+@Data
 public class CustomerDTO {
     private int cId;
     private String cName;

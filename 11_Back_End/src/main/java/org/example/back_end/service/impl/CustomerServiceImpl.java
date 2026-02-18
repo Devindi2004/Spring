@@ -22,9 +22,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void saveCustomer(CustomerDTO customerDTO) {
-        // Relationships nisa manual mapping ho ModelMapper settings check karanna
         Customer customer = modelMapper.map(customerDTO, Customer.class);
-        // Relationships null widiyata save wenna hadanna (Entity eke cascade nisa)
         customerRepository.save(customer);
     }
 

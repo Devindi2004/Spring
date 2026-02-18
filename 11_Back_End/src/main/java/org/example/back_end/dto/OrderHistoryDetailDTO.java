@@ -12,5 +12,5 @@ public class OrderHistoryDetailDTO {
     private String itemName;
     private int qty;
     private double unitPrice;
-    private int remainingQty;   // 🔥 add this
+    private int remainingQty;
 }

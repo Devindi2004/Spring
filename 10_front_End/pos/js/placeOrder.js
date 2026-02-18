@@ -6,10 +6,8 @@ $(document).ready(function () {
     getAllOrders();
 });
 
-
-// ==========================
 // 1. LOAD CUSTOMERS
-// ==========================
+
 function loadCustomers() {
     $.ajax({
         url: 'http://localhost:8080/api/v1/customer',
@@ -30,10 +28,8 @@ function loadCustomers() {
     });
 }
 
-
-// ==========================
 // 2. LOAD ITEMS
-// ==========================
+
 function loadItems() {
     $.ajax({
         url: 'http://localhost:8080/api/v1/item',
@@ -55,10 +51,8 @@ function loadItems() {
     });
 }
 
-
-// ==========================
 // 3. ITEM CHANGE EVENT
-// ==========================
+
 $(document).on("change", "#itemId", function () {
 
     let itemId = $(this).val();
@@ -107,10 +101,8 @@ $(document).on("change", "#itemId", function () {
     });
 });
 
-
-// ==========================
 // 4. ADD TO CART
-// ==========================
+
 function addToCart() {
 
     let itemId = $('#itemId').val();
@@ -156,10 +148,8 @@ function addToCart() {
     $("#orderQty").val("");
 }
 
-
-// ==========================
 // 5. RENDER CART
-// ==========================
+
 function renderCart() {
 
     $('#cartTable').empty();
@@ -191,10 +181,8 @@ function renderCart() {
     $('#itemCount').text(cart.length);
 }
 
-
-// ==========================
 // 6. REMOVE FROM CART
-// ==========================
+
 function removeFromCart(index) {
     cart.splice(index, 1);
     renderCart();
@@ -205,10 +193,8 @@ function clearCart() {
     renderCart();
 }
 
-
-// ==========================
 // 7. PLACE ORDER
-// ==========================
+
 function placeOrder() {
 
     let customerId = $('#customerId').val();
@@ -247,10 +233,8 @@ function placeOrder() {
     });
 }
 
-
-// ==========================
 // 8. GET ALL ORDERS (HISTORY)
-// ==========================
+
 function getAllOrders() {
 
     $("#orderTable").empty();
@@ -292,11 +276,8 @@ function getAllOrders() {
     });
 }
 
-
-
-// ==========================
 // 9. DELETE ORDER
-// ==========================
+
 function deleteOrder(orderId) {
 
     Swal.fire({

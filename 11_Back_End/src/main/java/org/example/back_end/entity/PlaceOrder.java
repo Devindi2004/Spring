@@ -1,6 +1,6 @@
 package org.example.back_end.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference; // Meka import karanna
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
@@ -19,6 +19,6 @@ public class PlaceOrder {
     private Customer customer;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    @JsonManagedReference // Meka thamai loop eka nawaththanne
+    @JsonManagedReference
     private List<OrderDetail> orderDetails;
 }

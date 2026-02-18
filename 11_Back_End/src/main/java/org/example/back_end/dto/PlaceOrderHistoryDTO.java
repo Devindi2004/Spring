@@ -17,5 +17,5 @@ public class PlaceOrderHistoryDTO {
     private String customerName;
     private List<OrderHistoryDetailDTO> items;
 
-    private double totalPrice;   // 🔥 meka add karanna
+    private double totalPrice;
 }

@@ -17,7 +17,6 @@ public class Customer {
     private String cAddress;
     private int cAge;
 
-    // Customer kenekuta orders godak thiyenna puluwan
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PlaceOrder> orders;
 }

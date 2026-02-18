@@ -29,8 +29,6 @@ public class PlaceOrderServiceImpl implements PlaceOrderService {
     private final CustomerRepository customerRepository;
     private final ItemRepository itemRepository;
 
-    // ================= SAVE ORDER =================
-
     @Override
     public void saveOrder(PlaceOrderDTO dto) {
 
@@ -50,7 +48,6 @@ public class PlaceOrderServiceImpl implements PlaceOrderService {
                     .findById(itemDto.getItemId())
                     .orElseThrow(() -> new RuntimeException("Item Not Found"));
 
-            // Update stock
             item.setItemQty(item.getItemQty() - itemDto.getQty());
             itemRepository.save(item);
 
@@ -67,8 +64,6 @@ public class PlaceOrderServiceImpl implements PlaceOrderService {
         placeOrderRepository.save(order);
     }
 
-    // ================= GET HISTORY (FIXED) =================
-
     @Override
     public List<PlaceOrderHistoryDTO> getOrderData() {
 
@@ -82,12 +77,10 @@ public class PlaceOrderServiceImpl implements PlaceOrderService {
                                     detail.getItem().getItemName(),
                                     detail.getQty(),
                                     detail.getUnitPrice(),
-                                    detail.getItem().getItemQty()   // 🔥 current remaining stock
+                                    detail.getItem().getItemQty()
                             ))
                             .toList();
 
-
-            // ✅ Total calculate karana clean way eka
             double total = order.getOrderDetails().stream()
                     .mapToDouble(detail -> detail.getQty() * detail.getUnitPrice())
                     .sum();
@@ -103,10 +96,6 @@ public class PlaceOrderServiceImpl implements PlaceOrderService {
         }).toList();
     }
 
-
-
-    // ================= DELETE ORDER =================
-
     @Override
     public void deleteOrderById(int id) {
 
@@ -121,8 +110,6 @@ public class PlaceOrderServiceImpl implements PlaceOrderService {
 
         placeOrderRepository.deleteById(id);
     }
-
-    // ================= UPDATE ORDER =================
 
     @Override
     public void updateOrder(PlaceOrderDTO dto) {

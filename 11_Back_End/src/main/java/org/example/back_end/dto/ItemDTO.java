@@ -6,9 +6,9 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data // Getter, Setter, ToString okkoma meken enawa
+@Data
 public class ItemDTO {
-    private int itemId; // Changed to int
+    private int itemId;
     private String itemName;
     private int itemQty;
     private double itemPrice;
